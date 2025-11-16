@@ -1,0 +1,27 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Get the current branch name
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+
+# Only bump version when pushing to main
+if [ "$current_branch" = "main" ]; then
+  echo "📦 Bumping npm version for main branch..."
+
+  # Check if there are uncommitted changes
+  if ! git diff-index --quiet HEAD --; then
+    echo "⚠️  You have uncommitted changes. Please commit or stash them first."
+    exit 1
+  fi
+
+  # Bump patch version and get the new version
+  new_version=$(npm version patch --no-git-tag-version)
+
+  # Add the package.json change
+  git add package.json
+
+  # Commit the version bump
+  git commit -m "Bump version to ${new_version}"
+
+  echo "✅ Version bumped to ${new_version}"
+fi

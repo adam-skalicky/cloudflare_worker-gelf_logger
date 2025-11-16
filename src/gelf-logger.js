@@ -10,6 +10,7 @@
  * - Automatic timestamp generation
  * - Context-aware logging
  * - Optional console method overloading for automatic GELF forwarding
+ * - Session ID tracking for multi-instance function message segmentation
  */
 
 export class GELFLogger {
@@ -45,6 +46,9 @@ export class GELFLogger {
 	 * @param {number} config.maxFailedMessages - Maximum failed messages to track (default: 50)
 	 */
 	constructor(config = {}) {
+		// Generate a unique session ID for this logger instance
+		this.log_session_id = crypto.randomUUID();
+
 		// Endpoint configuration - automatically use env.GELF_LOGGING_URL if available
 		this.endpoint = config.endpoint || config.env?.GELF_LOGGING_URL;
 
@@ -141,7 +145,8 @@ export class GELFLogger {
 			short_message: String(shortMessage),     // Required: short descriptive message
 			timestamp: Date.now() / 1000,            // Unix timestamp with decimals
 			level: level,                            // Syslog severity level
-			facility: this.facility                  // Facility/application name
+			facility: this.facility,                 // Facility/application name
+			_log_session_id: this.log_session_id     // Unique session ID for this logger instance
 		};
 
 		// Add full message if provided
@@ -509,8 +514,9 @@ export class GELFLogger {
 			overloadConsole: this.overloadConsole, // Pass overloadConsole to child
 			timeout: this.timeout
 		});
-		// Preserve Cloudflare context in child logger
+		// Preserve Cloudflare context and session ID in child logger
 		childLogger.cfContext = { ...this.cfContext };
+		childLogger.log_session_id = this.log_session_id;
 		return childLogger;
 	}
 

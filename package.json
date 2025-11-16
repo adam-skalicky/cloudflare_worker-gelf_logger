@@ -10,7 +10,8 @@
 	"scripts": {
 		"test": "vitest run",
 		"test:watch": "vitest",
-		"test:coverage": "vitest run --coverage"
+		"test:coverage": "vitest run --coverage",
+		"prepare": "husky"
 	},
 	"keywords": [
 		"cloudflare",
@@ -53,6 +54,7 @@
 	"devDependencies": {
 		"@cloudflare/vitest-pool-workers": "^0.10.7",
 		"@vitest/coverage-v8": "4.0.9",
+		"husky": "^9.1.7",
 		"vitest": "^4.0.9"
 	}
 }
