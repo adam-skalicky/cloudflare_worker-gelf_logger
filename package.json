@@ -53,8 +53,10 @@
 	},
 	"devDependencies": {
 		"@cloudflare/vitest-pool-workers": "^0.10.7",
-		"@vitest/coverage-v8": "4.0.9",
+		"@vitest/coverage-v8": "^3.2.4",
+		"@vitest/runner": "^3.2.4",
+		"@vitest/snapshot": "^3.2.4",
 		"husky": "^9.1.7",
-		"vitest": "^4.0.9"
+		"vitest": "^3.2.4"
 	}
 }
