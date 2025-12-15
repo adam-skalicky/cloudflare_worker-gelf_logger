@@ -5,13 +5,14 @@ on:
     branches:
       - main
 
+permissions:
+  id-token: write
+  contents: write
+
 jobs:
   publish:
     runs-on: ubuntu-latest
     environment: Prod
-    permissions:
-      contents: write
-      id-token: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -24,6 +25,9 @@ jobs:
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org/'
+
+      - name: Update npm
+        run: npm install -g npm@latest
 
       - name: Enable Corepack
         run: corepack enable
@@ -64,4 +68,4 @@ jobs:
           git push
 
       - name: Publish to npm
-        run: npm publish --access public --provenance
+        run: npm publish
